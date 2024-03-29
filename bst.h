@@ -249,6 +249,7 @@ protected:
     // Add helper functions here
     static Node<Key, Value>* successor(Node<Key, Value>* current);
     bool checkBalance(Node<Key, Value>* root) const;
+    void clearHelper(Node<Key, Value>* node);
     int getHeight(Node<Key, Value>* node) const;
 
 protected:
@@ -478,6 +479,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
     }
 }
 
+
 /**
 * A remove method to remove a specific key from a Binary Search Tree.
 * Recall: The writeup specifies that if a node has 2 children you
@@ -555,11 +557,20 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::clear()
 {
     // TODO
-    Node<Key, Value>* curr = root_;
-    if (curr) {
-        root_ = nullptr;
-        delete(curr);
-    }
+    clearHelper(root_);
+    root_ = nullptr;
+}
+
+template<typename Key, typename Value>
+void BinarySearchTree<Key, Value>::clearHelper(Node<Key, Value>* node)
+{
+    // Base
+    if (node == nullptr) return; 
+
+    clearHelper(node->getLeft());  // Recursively delete left subtree
+    clearHelper(node->getRight()); // Recursively delete right subtree
+
+    delete node;
 }
 
 
@@ -752,3 +763,5 @@ End implementations for the BinarySearchTree class.
 */
 
 #endif
+
+// valgrind run: valgrind --tool=memcheck --leak-check=yes ./bst_tests
