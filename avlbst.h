@@ -164,6 +164,7 @@ void AVLTree<Key, Value>::insert(const std::pair<const Key, Value> &new_item)
         while (curr) {
             if (temp->getKey() == curr->getKey()) {
                 nodeSwap(temp, curr);
+                delete curr;
                 check = false;
                 break;
             }
@@ -337,10 +338,10 @@ void AVLTree<Key, Value>::rotateRight(AVLNode<Key, Value>* current) {
     }
     current->setParent(child);
     current->setLeft(child->getRight());
-	if (child->getRight()) {
-		child->getRight()->setParent(current);
-	}
-	child->setRight(current);
+	  if (child->getRight()) {
+		    child->getRight()->setParent(current);
+	  }
+	  child->setRight(current);
 }
 
 // Refer to Slides
