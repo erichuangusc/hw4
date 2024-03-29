@@ -291,9 +291,6 @@ void AVLTree<Key, Value>::remove(const Key& key)
     }
 }
 
-
-
-
 // Helper functions for insert and remove
 template<class Key, class Value>
 void AVLTree<Key, Value>::rotateLeft(AVLNode<Key, Value>* current) {
@@ -414,14 +411,14 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value>* parent, AVLNode<Key, Va
                 rotateRight(parent);
                 rotateLeft(grandparent);
 
-                if (child->getBalance() == 1) {
-                    parent->setBalance(0);
-                    grandparent->setBalance(-1);
-                    child->setBalance(0);
-                }
-                else if (child->getBalance() == 0) {
+                if (child->getBalance() == 0) {
                     parent->setBalance(0);
                     grandparent->setBalance(0);
+                    child->setBalance(0);
+                }
+                else if (child->getBalance() == 1) {
+                    parent->setBalance(0);
+                    grandparent->setBalance(-1);
                     child->setBalance(0);
                 }
                 else {
@@ -473,14 +470,14 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* current, int8_t diff)
                 rotateLeft(child);
                 rotateRight(current);
 
-                if (grandchild->getBalance() == 1) {
-                    current->setBalance(0);
-                    child->setBalance(-1);
-                    grandchild->setBalance(0);
-                }
-                else if (grandchild->getBalance() == 0) {
+                if (grandchild->getBalance() == 0) {
                     current->setBalance(0);
                     child->setBalance(0);
+                    grandchild->setBalance(0);
+                }
+                else if (grandchild->getBalance() == 1) {
+                    current->setBalance(0);
+                    child->setBalance(-1);
                     grandchild->setBalance(0);
                 }
                 else {
@@ -504,16 +501,16 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* current, int8_t diff)
         if (current->getBalance() + diff == 2) {
             AVLNode<Key, Value>* child = current->getRight();
 
-            if (child->getBalance() == 1) {
+            if (child->getBalance() == 0) {
+                rotateLeft(current);
+                current->setBalance(1);
+                child->setBalance(-1);
+            }
+            else if (child->getBalance() == 1) {
                 rotateLeft(current);
                 current->setBalance(0);
                 child->setBalance(0);
                 removeFix(parent, nextDiff);
-            }
-            else if (child->getBalance() == 0) {
-                rotateLeft(current);
-                current->setBalance(1);
-                child->setBalance(-1);
             }
             else {
                 AVLNode<Key, Value>* grandchild = child->getLeft();
